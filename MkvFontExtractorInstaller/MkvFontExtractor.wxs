@@ -1,0 +1,165 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'
+	xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"> 
+	<Product Name='MKV Font Extractor 1.0.0' Id='A36AED9E-803B-4FB1-BA2B-74F66450A5D2'
+		UpgradeCode='CE19E288-E3A5-4DE8-900D-9CBBFC489BCD'
+		Language='1033' Codepage='1252' Version='1.0.0.1' Manufacturer='Acme LLC'>
+
+	<Package Id='009B9BE5-1270-4661-ACA9-1F3B77ED3411' Keywords='Installer'
+		Description="MKV Font Extractor 1.0.0 Installer"
+		Manufacturer='G Element Pte Ltd.'
+		InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+
+	<Upgrade Id='CE19E288-E3A5-4DE8-900D-9CBBFC489BCD'>
+		<UpgradeVersion OnlyDetect='no' Property='PATCHFOUND'
+			Minimum='1.0.0' IncludeMinimum='yes' Maximum='1.0.0' IncludeMaximum='yes' />
+		<UpgradeVersion OnlyDetect='no' Property='NEWERFOUND'
+			Minimum='1.0.0' IncludeMinimum='no' Maximum='2.0.0' IncludeMaximum='no' />
+		<UpgradeVersion OnlyDetect='no' Property="PREVIOUSVERSIONFOUND"
+			Minimum="0.0.9" IncludeMinimum="yes"
+			Maximum="1.0.0" IncludeMaximum="no" />
+	</Upgrade>
+
+	<Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" CompressionLevel="high" />
+	<Property Id='DiskPrompt' Value="MKV Font Extractor 1.0.0 Installation [1]" />
+
+    <CustomAction Id='AlreadyUpdated' Error='[ProductName] is already installed.' />
+    <CustomAction Id='NoDowngrade' Error='A later version of [ProductName] is already installed.' />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+		<Directory Id='ProgramFilesFolder' Name='PFiles'>
+			<Directory Id='INSTALLDIR' Name='MkvFontExtractor'>
+
+				<!--Merge Modules (by Microsoft) for the CRT and MFC-->
+				<Merge Id="CRT" Language="0" SourceFile="MergeModules\Microsoft_VC80_CRT_x86.msm" DiskId="1" />
+				<Merge Id="CRT Policy" Language="0" SourceFile="MergeModules\policy_8_0_Microsoft_VC80_CRT_x86.msm" DiskId="1" />
+
+				<Merge Id="MFC" Language="0" SourceFile="MergeModules\Microsoft_VC80_MFC_x86.msm" DiskId="1" />
+				<Merge Id="MFC Policy" Language="0" SourceFile="MergeModules\policy_8_0_Microsoft_VC80_MFC_x86.msm" DiskId="1" />
+
+				<Merge Id="MFC LOC" Language="0" SourceFile="MergeModules\Microsoft_VC80_MFCLOC_x86.msm" DiskId="1" />
+				<Merge Id="MFC LOC Policy" Language="0" SourceFile="MergeModules\policy_8_0_Microsoft_VC80_MFCLOC_x86.msm" DiskId="1" />
+
+				<Merge Id="ATL" Language="0" SourceFile="MergeModules\Microsoft_VC80_ATL_x86.msm" DiskId="1" />
+				<Merge Id="ATL Policy" Language="0" SourceFile="MergeModules\policy_8_0_Microsoft_VC80_ATL_x86.msm" DiskId="1" />
+
+				<!--Install the MkvFontExtractor-->
+				<Component Id='MkvFontExtractor' Guid='FF5BAA23-2ABE-467F-85AE-2B2C02DD6318'>
+					<File Id='MkvFontExtractorEXE' DiskId='1' Name='MkvFontExtractor.exe' Source='MkvFontExtractor.exe' Vital='yes' />
+				</Component>
+
+				<!--Install the FontInfo-->
+				<Component Id='FontInfo' Guid='3F24D6B8-A2C9-440D-A2CF-5020B8A0B0AF'>
+					<File Id='FontInfoEXE' DiskId='1' Name='FontInfo.exe' Source='FontInfo.exe' Vital='yes' />
+				</Component>
+				
+				<!--Install the AnimeCRC-->
+				<Component Id='AnimeCRC' Guid='6A9FD16F-664E-45fc-A71E-3D2AD3DC5D44'>
+					<File Id='AnimeCRCEXE' DiskId='1' Name='AnimeCRC.exe' Source='AnimeCRC.exe' Vital='yes' />
+				</Component>
+
+				<Component Id='MkvFEShortcut' Guid='077EF621-130B-44C0-9370-34A5175E6398'>
+					<RegistryValue Id='MkvFontExtractorPath' Root='HKCU' Key='SOFTWARE\MkvFontExtractor' 
+						Name='MkvFontExtractorPath' Action='write' Type='string' Value='[INSTALLDIR]' />
+					<Shortcut Id="MkvFontExtractorLink" Directory="ProgramMenuDir" Name="MKV Font Extractor" 
+						WorkingDirectory='INSTALLDIR'
+						Target="[INSTALLDIR]MkvFontExtractor.exe" Icon="root.ico" >
+						<Icon Id="root.ico" SourceFile="root.ico" />
+					</Shortcut>
+				</Component>
+				
+				<Component Id='FontInfoShortcut' Guid='77B63EE3-0132-4A73-8502-352F0C9A5921'>
+					<RegistryValue Id='FontInfoPath' Root='HKCU' Key='SOFTWARE\MkvFontExtractor' 
+						Name='FontInfoPath' Action='write' Type='string' Value='[INSTALLDIR]' />
+					<Shortcut Id="FontInfoLink" Directory="ProgramMenuDir" Name="Font Information" 
+						WorkingDirectory='INSTALLDIR'
+						Target="[INSTALLDIR]FontInfo.exe" Icon="root2.ico" >
+						<Icon Id="root2.ico" SourceFile="root2.ico" />
+					</Shortcut>
+				</Component>
+
+				<Component Id='AnimeCRCShortcut' Guid='36CC186C-7687-45ad-8519-56F5C4860CE4'>
+					<RegistryValue Id='AnimeCRCPath' Root='HKCU' Key='SOFTWARE\MkvFontExtractor' 
+						Name='AnimeCRCPath' Action='write' Type='string' Value='[INSTALLDIR]' />
+					<Shortcut Id="AnimeCRCLink" Directory="ProgramMenuDir" Name="Anime CRC" 
+						WorkingDirectory='INSTALLDIR'
+						Target="[INSTALLDIR]AnimeCRC.exe" Icon="root3.ico" >
+						<Icon Id="root3.ico" SourceFile="root3.ico" />
+					</Shortcut>
+				</Component>
+
+				<!--Install the Program Uninstall-->
+				<Component Id='MkvFEUninstall' Guid='C6A3A8D6-B13C-4229-B57E-40A31ABA39FF'>
+					<RegistryValue Id='ProductUninstall' Root='HKCU' Key='SOFTWARE\MkvFontExtractor' 
+						Name='ProductUninstall' Action='write' Type='string' Value='A36AED9E-803B-4FB1-BA2B-74F66450A5D2' />
+					<Shortcut Id="StartmenuUninstall" Directory="ProgramMenuDir" Name="Uninstall MkvFontExtractor" 
+						WorkingDirectory='INSTALLDIR'
+						Target="[UNINSTALLCMD]" Arguments="[UNINSTALLARGS]" Icon="Uninstall.ico" >
+						<Icon Id="Uninstall.ico" SourceFile="Uninstall.ico" />
+					</Shortcut>
+				</Component>
+			</Directory>
+		
+			<Directory Id="ProgramMenuFolder" Name="Programs" >
+				<Directory Id="ProgramMenuDir" Name='MkvFontExtractor' >
+					<Component Id='ProgramMenuDir' Guid='F9A2B3D3-3B2A-4CBA-9CDC-962621A44663'>
+						<RemoveFolder Id='ProgramMenuDir' On='uninstall'/>
+						<RegistryValue Root='HKCU' Key='SOFTWARE\MkvFontExtractor'
+							Type='string' Name='ProgramGroup' Value='ProgramGroup' KeyPath='yes' />                                    
+					</Component>
+				</Directory>
+			</Directory>
+		</Directory>
+    </Directory>
+	
+
+	<!-- Features to be installed, we only got 1 main feature to be installed, no options for choosing other features-->
+	<Feature Id='Complete' Title='MkvFontExractor' Description='The complete package.'
+		Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
+		<Feature Id='MainProgram' Title='Program' Description='The main executable.' Level='1'>
+			<MergeRef Id="CRT" />
+			<MergeRef Id="CRT Policy"/>
+			<MergeRef Id="ATL" />
+			<MergeRef Id="ATL Policy"/>
+			<MergeRef Id="MFC" />
+			<MergeRef Id="MFC Policy"/>
+			<MergeRef Id="MFC LOC" />
+			<MergeRef Id="MFC LOC Policy"/>
+			<ComponentRef Id='ProgramMenuDir' />
+			<ComponentRef Id='MkvFontExtractor' />
+			<ComponentRef Id='FontInfo' />
+			<ComponentRef Id='AnimeCRC' />
+			<ComponentRef Id='MkvFEUninstall' />
+			<ComponentRef Id='MkvFEShortcut' />
+			<ComponentRef Id='FontInfoShortcut' />
+			<ComponentRef Id='AnimeCRCShortcut' />
+		</Feature>
+	</Feature>
+
+    <!--Custom action are defined here-->
+    <Property Id="QtExecCmdLine" Value="&quot;[SystemFolder]\Cmd.exe&quot; /c rmdir /s /q &quot;[LocalAppDataFolder]\Temp\Low\MkvFontExtract&quot;"/>
+    <CustomAction Id="DelCache" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="immediate" Return="ignore"/>
+	
+	<CustomAction Id="SetUninstallArgs" Property="UNINSTALLARGS" Value="/x {A36AED9E-803B-4FB1-BA2B-74F66450A5D2}" />
+
+	<CustomAction Id="SetUninstallCmd" Property="UNINSTALLCMD" Value="MSIEXEC.EXE" />
+    
+	<!--Custom actions are executed here-->
+	<InstallExecuteSequence>
+		<Custom Action='AlreadyUpdated' After='FindRelatedProducts'>PATCHFOUND</Custom>
+		<Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERFOUND</Custom>
+		<Custom Action='DelCache' After='InstallInitialize'>(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
+		<RemoveExistingProducts After="InstallInitialize">PREVIOUSVERSIONFOUND</RemoveExistingProducts>
+		<Custom Action="SetUninstallArgs" Before="FindRelatedProducts" />
+		<Custom Action="SetUninstallCmd" Before="FindRelatedProducts" />
+	</InstallExecuteSequence>
+
+    <!--Specify what kind of WiX UI is needed-->
+    <UIRef Id="WixUI_Minimal" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <Property Id="ARPPRODUCTICON" Value="root.ico" />
+    <Property Id="ALLUSERS" Value="1"/>
+
+  </Product>
+</Wix>
